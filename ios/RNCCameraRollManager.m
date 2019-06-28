@@ -7,7 +7,6 @@
 
 #import "RNCCameraRollManager.h"
 
-#import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
@@ -271,7 +270,6 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
                                                 : (asset.mediaType == PHAssetMediaTypeAudio
                                                   ? @"audio"
                                                   : @"unknown")));
-      CLLocation *const loc = asset.location;
       NSString *const origFilename = resource.originalFilename;
 
       // A note on isStored: in the previous code that used ALAssets, isStored
@@ -293,14 +291,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
               @"isStored": @YES, // this field doesn't seem to exist on android
               @"playableDuration": @([asset duration]) // fractional seconds
           },
-          @"timestamp": @(asset.creationDate.timeIntervalSince1970),
-          @"location": (loc ? @{
-              @"latitude": @(loc.coordinate.latitude),
-              @"longitude": @(loc.coordinate.longitude),
-              @"altitude": @(loc.altitude),
-              @"heading": @(loc.course),
-              @"speed": @(loc.speed), // speed in m/s
-            } : @{})
+          @"timestamp": @(asset.creationDate.timeIntervalSince1970)
           }
       }];
     };
